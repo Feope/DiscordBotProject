@@ -5,6 +5,14 @@ import discord
 #Environemnt variables to access the token
 from dotenv import load_dotenv
 
+#
+from discord.ext import commands
+
+#
+bot = commands.Bot(command_prefix='?')
+
+bot.load_extension('test')
+
 #Loading token and guild name to make sure that the correct guild and token are used
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -32,7 +40,7 @@ async def on_ready():
         f'{client.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
-    
+  
 #Event for any messages sent       
 @client.event
 async def on_message(message):
@@ -73,4 +81,9 @@ async def on_message(message):
                     bothelp() + '\n'
                 )
 
-client.run(TOKEN)
+#
+@bot.command()
+async def test(ctx, arg):
+    await ctx.send(arg)
+
+bot.run(TOKEN)
