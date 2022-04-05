@@ -5,12 +5,16 @@ import discord
 #Environemnt variables to access the token
 from dotenv import load_dotenv
 
-#
+#Importing commands for functionality
 from discord.ext import commands
 
-#
-bot = commands.Bot(command_prefix='?')
+#Defining prefix for later use in commands
+default_prefix = ['!']
 
+#Assigning the prefix to the bot object and turning off the default help command
+bot = commands.Bot(command_prefix = default_prefix, help_command=None)
+
+#Loading the test file to import extensions
 bot.load_extension('test')
 
 #Loading token and guild name to make sure that the correct guild and token are used
@@ -18,72 +22,63 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 GUILD = os.getenv("DISCORD_GUILD")
 
-#Creating the client object that is used to respond to events
-client = discord.Client()
-
-#botcommand block
-botprefix = '!'
-def botcurrentprefix(): return botprefix + 'prefix'
-def botsetprefix(): return botprefix + 'set'
-def botgreet(): return botprefix + 'greet'
-def bothelp(): return botprefix + 'help'
-
 #Event for on launch check if the selected guild from environments is also in the server list.
-@client.event
+@bot.event
 async def on_ready():
-    for guild in client.guilds:
+    for guild in bot.guilds:
         if guild.name == GUILD:
             break
 
 #Printing bot-id and server-id to console
     print(
-        f'{client.user} is connected to the following guild:\n'
+        f'{bot.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
-  
-#Event for any messages sent       
-@client.event
-async def on_message(message):
 
-    #Defining channel and author of message for quicker access as well as the prefix
-    global botprefix
-    channel = message.channel
-    mauth = message.author
-
-    #Validating that message is from actual user, ignoring any bots
-    if mauth.bot == False:
-
-        #Matching for the botcommands
-        match message:
-
-            #User wants to know current prefix
-            case botcommand if botcommand.content.startswith(botcurrentprefix()) == True: #botcurrent prefix
-                await channel.send('Current botcommand prefix is ' + str(botprefix))
-
-            #User greets
-            case botcommand if botcommand.content.startswith(botgreet()) == True: #botgreet
-                await channel.send('Hello ' + str(mauth))
-
-            #User wants to change prefix
-            case botcommand if botcommand.content.startswith(botsetprefix()) == True: #botsetprefix
-                msg = message.content
-                botprefix = msg[-1]
-                await channel.send('New botcommand prefix is ' +str(botprefix))
-                return botprefix
-
-            #User wants to know commands
-            case botcommand if botcommand.content.startswith(bothelp()) == True: #bothelp
-                await channel.send(
-                    'Current commands for the bot are: \n' +
-                    botcurrentprefix() + '\n' +
-                    botsetprefix() + '\n' +
-                    botgreet() + '\n' +
-                    bothelp() + '\n'
-                )
-
-#
+#Setting the new prefix to passed argument
 @bot.command()
-async def test(ctx, arg):
-    await ctx.send(arg)
+async def setprefix(ctx, prefix):
+    bot.command_prefix = prefix
+    await ctx.send(f"Prefix changed to ``{prefix}``")
 
+#Send the current prefix(for some reason)
+@bot.command()
+async def prefix(ctx):
+    listToStr = ''.join(map(str, default_prefix))
+    await ctx.send(f"Current prefix is ``{listToStr}``")
+
+#Says hello to the user
+@bot.command()
+async def greet(ctx):
+    await ctx.send(f"Hello {ctx.author.display_name}")
+
+#Lists the current commands and pings mentioned user(s) or author if no mentions
+@bot.command()
+async def help(ctx):
+    listToStr = ''.join(map(str, bot.command_prefix))
+    ping_element = []
+    if(ctx.message.mentions):
+        for m in ctx.message.raw_mentions:
+            pingable = f"<@{m}>"
+            ping_element.append(pingable)
+            listPing = ' '.join(map(str, ping_element))
+        await ctx.send(f"{listPing} Current commands for the bot are: \n" +
+                        f"{listToStr}prefix\n" +
+                        f"{listToStr}setprefix\n" +
+                        f"{listToStr}greet\n" +
+                        f"{listToStr}help")
+    else:
+        meauth = f"<@{ctx.author.id}>"    
+        await ctx.send(f"{meauth} Current commands for the bot are: \n" +
+                        f"{listToStr}prefix\n" +
+                        f"{listToStr}setprefix\n" +
+                        f"{listToStr}greet\n" +
+                        f"{listToStr}help")
+
+#Command for testing purposes
+@bot.command()
+async def test(ctx):
+    await ctx.send(ctx.message.raw_mentions)
+
+#Run bot using the token
 bot.run(TOKEN)
