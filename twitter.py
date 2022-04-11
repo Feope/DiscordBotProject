@@ -1,49 +1,89 @@
 #
-# WIP
+#
 import os
 import tweepy
+import json
 from dotenv import load_dotenv
 
+#Loading the authentication token for the bot
 load_dotenv()
-consumer_key = os.getenv("TWITTER_CONSUMER_TOKEN")
-consumer_secret = os.getenv("TWITTER_CONSUMER_SECRET_TOKEN")
-access_token = os.getenv("TWITTER_ACCESS_TOKEN")
-access_secret = os.getenv("TWITTER_ACCESS_SECRET_TOKEN")
 bearer_token = os.getenv("TWITTER_BEARER_TOKEN")
 
-class MyStream(tweepy.StreamingClient):
-    def on_tweet(self, tweet):
-        print(tweet.id)
-        print(tweet.text)
-    def on_matching_rules(self, matching_rules):
-        print('matched rule')
-        return super().on_matching_rules(matching_rules)
-    def on_connect(self):
-        print("connected")
-        print(printer.running)
-        print(printer.get_rules())
-        return super().on_connect()
-    def on_exception(self, exception):
-        print("excpetion")
-        return super().on_exception(exception)
-    def on_disconnect(self):
-        print("disconnect")
-        return super().on_disconnect()
+#Url snippets to recreate the link for the tweet
+base_url = "https://twitter.com/"
+url_tag = ""
+url_part2 = "/status/"
+url_id = ""
 
-printer = MyStream(bearer_token)
+#Variables that will contain the link, text and author of the tweet
+tweet_text = ""
+tweet_author = url_tag
+url = ""
 
-#Remove all existing filter rules
-if(printer.get_rules()[0]):
-    rulesDeleted = []
-    list = printer.get_rules()[0]
+def twitter_bot():
+    class MyStream(tweepy.StreamingClient):
 
-    for i in list:
-        rulesDeleted.append(i.id)
+        #Receives the tweet data
+        def on_data(self, raw_data):
+            #Raw data is in byte format so it's decoded first
+            decoded_data = raw_data.decode('UTF-8')
+            #Load the string as json
+            json_data = json.loads(decoded_data)
 
-    for i in rulesDeleted:
-        printer.delete_rules(i)
+            #Extract id, name and text from the json
+            tweet_id = json_data["data"]["id"]
+            tweet_text = json_data["data"]["text"]
+            tweet_author_from_rules = json_data["matching_rules"][0]["tag"]
 
-printer.add_rules(tweepy.StreamRule("from:Meisinger2"))
-print(printer.get_rules())
+            #Access global variables
+            global base_url
+            global url_tag
+            global url_part2
+            global url_id
+            global url
 
-printer.filter()
+            #Assign the tag and id to the global variables
+            url_tag = tweet_author_from_rules
+            url_id = tweet_id
+
+            #Recreate the link to the tweet using author from the tag and tweet id
+            url = f"{base_url}{url_tag}{url_part2}{url_id}"
+
+            print(f"ID, Text and name from rule tags: {tweet_id} {tweet_text} {tweet_author_from_rules}")
+            print(f"Link to the tweet: {url}")
+            print(tweet_text)
+
+            return super().on_data(raw_data)
+
+        #Print connected and True in console to know when it is ready to handle tweets    
+        def on_connect(self):
+            print("connected")
+            print(printer.running)
+            return super().on_connect()
+
+        #Print exception or disconnect on exception or disconnect    
+        def on_exception(self, exception):
+            print("excpetion")
+            return super().on_exception(exception)
+        def on_disconnect(self):
+            print("disconnect")
+            return super().on_disconnect()
+
+    #Assign the token and to wait if limit is reached 
+    printer = MyStream(bearer_token, wait_on_rate_limit=True)
+
+    #Remove all existing filter rules
+    if(printer.get_rules()[0]):
+        rulesDeleted = []
+        list = printer.get_rules()[0]
+
+        for i in list:
+            rulesDeleted.append(i.id)
+
+        for i in rulesDeleted:
+            printer.delete_rules(i)
+
+    #Rules to filter for person
+    printer.add_rules(tweepy.StreamRule("from:Meisinger2", "Meisinger2"))
+
+    printer.filter()

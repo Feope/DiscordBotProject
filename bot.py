@@ -1,6 +1,9 @@
 # bot.py
 import os
 import discord
+import multiprocessing
+
+from twitter import twitter_bot
 
 #Environemnt variables to access the token
 from dotenv import load_dotenv
@@ -75,10 +78,21 @@ async def help(ctx):
                         f"{listToStr}greet\n" +
                         f"{listToStr}help")
 
+                     
+
 #Command for testing purposes
 @bot.command()
 async def test(ctx):
     await ctx.send(ctx.message.raw_mentions)
 
 #Run bot using the token
-bot.run(TOKEN)
+def discord_bot():
+    bot.run(TOKEN)
+
+if __name__ == "__main__":
+    p1 = multiprocessing.Process(target=discord_bot)
+    p2 = multiprocessing.Process(target=twitter_bot)
+    p1.start()
+    p2.start()
+    p1.join()
+    p2.join()
