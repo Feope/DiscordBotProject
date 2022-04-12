@@ -14,13 +14,15 @@ default_prefix = ['!']
 #Assigning the prefix to the bot object and turning off the default help command
 bot = commands.Bot(command_prefix = default_prefix, help_command=None)
 
-#Loading the test file to import extensions
+#Loading command extension files
 bot.load_extension('test')
+bot.load_extension('commands.ytl')
 
 #Loading token and guild name to make sure that the correct guild and token are used
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 GUILD = os.getenv("DISCORD_GUILD")
+
 
 #Event for on launch check if the selected guild from environments is also in the server list.
 @bot.event
