@@ -1,6 +1,7 @@
 # bot.py
 import os
-import discord
+import commands.ytl
+
 
 #Environemnt variables to access the token
 from dotenv import load_dotenv
@@ -82,5 +83,9 @@ async def help(ctx):
 async def test(ctx):
     await ctx.send(ctx.message.raw_mentions)
 
+
 #Run bot using the token
 bot.run(TOKEN)
+
+
+
