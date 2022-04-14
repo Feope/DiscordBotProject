@@ -1,7 +1,7 @@
 # YouTube Link
-import json, os, discord, requests, time
+import json, os, discord, requests
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 
 #fetch Youtube API key from env file
@@ -16,6 +16,12 @@ class YoutubeWatcher(commands.Cog):
         self.youtubeid = None
         self.channel = None
         self.oldvid = None
+
+    def ytstart(self):
+        self.ytupdates.start()
+
+    def ytstop(self):
+        self.ytupdates.cancel()
 
     #fetch a list of videos on channel and create a list from them
     def fetch_channel_videos(self, limit = None):
@@ -66,9 +72,31 @@ class YoutubeWatcher(commands.Cog):
         else:
             self.oldvid = newvideo
             await self.channel.send(f"Hello there. {newvideo}")
+    
+    @tasks.loop(seconds=5)
+    async def ytupdates(self):
+        videolist = self.fetch_channel_videos(10)
+        newvideo = "https://www.youtube.com/watch?v=" + videolist[0]
+        await self.channel.send(f"Video ID list ``{videolist}``")
+        if newvideo == self.oldvid:
+            await self.channel.send("No new vids")
+            return
+        else:
+            self.oldvid = newvideo
+            await self.channel.send(f"Hello there. {newvideo}")
+        print("running")
 
+    @commands.command()
+    async def start(self, ctx):
+        self.ytstart()
+        await ctx.send("Starting monitoring")
+
+    @commands.command()
+    async def stop(self, ctx):
+        self.ytstop()
+        await ctx.send("Stopping monitoring")
 
 
 def setup(bot):
-    print('ytl')
+    print('YTL commands loaded')
     bot.add_cog(YoutubeWatcher(bot))
