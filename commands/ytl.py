@@ -17,9 +17,11 @@ class YoutubeWatcher(commands.Cog):
         self.channel = None
         self.oldvid = None
 
+    #starts the background task loop checking for updates
     def ytstart(self):
         self.ytupdates.start()
 
+    #stops the background task loop checking for updates
     def ytstop(self):
         self.ytupdates.cancel()
 
@@ -45,7 +47,6 @@ class YoutubeWatcher(commands.Cog):
             except KeyError:
                 print("error")
         return videos
-
 
     #command to set the youtube channels ID
     @commands.command()
@@ -73,30 +74,30 @@ class YoutubeWatcher(commands.Cog):
             self.oldvid = newvideo
             await self.channel.send(f"Hello there. {newvideo}")
     
-    @tasks.loop(seconds=5)
+    #background loop for checking target channels for new video uploads
+    @tasks.loop(seconds=60)
     async def ytupdates(self):
         videolist = self.fetch_channel_videos(10)
         newvideo = "https://www.youtube.com/watch?v=" + videolist[0]
-        await self.channel.send(f"Video ID list ``{videolist}``")
         if newvideo == self.oldvid:
-            await self.channel.send("No new vids")
             return
         else:
             self.oldvid = newvideo
             await self.channel.send(f"Hello there. {newvideo}")
-        print("running")
 
+    #user command for starting the channel monitoring loop
     @commands.command()
     async def start(self, ctx):
         self.ytstart()
         await ctx.send("Starting monitoring")
 
+    #user command for stopping the channel monitoring loop
     @commands.command()
     async def stop(self, ctx):
         self.ytstop()
         await ctx.send("Stopping monitoring")
 
-
+#loading the cog to bot
 def setup(bot):
     print('YTL commands loaded')
     bot.add_cog(YoutubeWatcher(bot))
