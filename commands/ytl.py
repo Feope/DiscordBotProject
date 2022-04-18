@@ -28,14 +28,13 @@ class YoutubeWatcher(commands.Cog):
     #fetch a list of videos on channel and create a list from them
     def fetch_channel_videos(self, limit = None):
         url = f"https://www.googleapis.com/youtube/v3/search?key={YTKEY}&channelId={self.youtubeid}&part=id&order=date"
+        print(url)#printing the url for test purposes
         if limit is not None and isinstance(limit, int):
             url += "&maxResults=" + str(limit)
         json_url = requests.get(url)
         data = json.loads(json_url.text)
         videos = list()
         vid_data = data["items"]
-        #printing the url for test purposes
-        print(url)
 
         #taking the video IDs from the channel data
         for item in vid_data:
@@ -48,33 +47,53 @@ class YoutubeWatcher(commands.Cog):
                 print("error")
         return videos
 
-    #command to set the youtube channels ID
+    #command to set the youtube channels ID 
     @commands.command()
     async def setyoutubeid(self, ctx, *, youtuberid):
-        self.youtubeid = youtuberid
-        await ctx.send(f"Youtuber ID set to ``{self.youtubeid}``")
+
+        url = f"https://www.googleapis.com/youtube/v3/search?key={YTKEY}&channelId={youtuberid}&part=id&order=date"
+        print(url) #printing the url for test purposes
+        try:
+            json_url = requests.get(url)
+            data = json.loads(json_url.text)
+            vid_data = data["items"] #checking if json has items data to see if the channel exists or not.In case there is no items the channel is not valid
+            self.youtubeid = youtuberid
+            await ctx.send(f"Youtuber ID set to ``{self.youtubeid}``")
+        except:
+            await ctx.send("Invalid channel")
 
     #command to set the discord channel where bot should post new videos
     @commands.command()
     async def setdiscordchannel(self, ctx, *, channelname):
-        self.channel = discord.utils.get(ctx.guild.channels, name=channelname)
-        await ctx.send(f"Channel set to ``{self.channel}``")
-        await self.channel.send("Hello there.")
+        try:
+            self.channel = discord.utils.get(ctx.guild.channels, name=channelname)
+            if self.channel != None:
+                await ctx.send(f"Channel set to ``{self.channel}``")
+            await self.channel.send("Hello there.")
+        except:
+            await ctx.send(f"Channel not found, channel set to ``{self.channel}``")
 
     #testcommand, on command checks the latest video on specified youtube channel, if the video is new posts it to chosen discord channel, if not informs that there is no new videos
     @commands.command()
     async def checktest(self, ctx):
-        videolist = self.fetch_channel_videos(10)
-        newvideo = "https://www.youtube.com/watch?v=" + videolist[0]
-        await ctx.send(f"Video ID list ``{videolist}``")
-        if newvideo == self.oldvid:
-            await ctx.send("No new vids")
-            return
+        if (self.channel != None and self.youtubeid != None):
+            videolist = self.fetch_channel_videos(10)
+            newvideo = "https://www.youtube.com/watch?v=" + videolist[0]
+            await ctx.send(f"Video ID list ``{videolist}``")
+            if newvideo == self.oldvid:
+                await ctx.send("No new vids")
+                return
+            else:
+                self.oldvid = newvideo
+                await self.channel.send(f"Hello there. {newvideo}")
+        elif self.channel != None:
+            await ctx.send(f"Youtube channel ID not set.")
+        elif self.youtubeid != None:
+            await ctx.send(f"Discord channel not set.")
         else:
-            self.oldvid = newvideo
-            await self.channel.send(f"Hello there. {newvideo}")
+            await ctx.send(f"Discord channel & youtube channel ID not set.")
     
-    #background loop for checking target channels for new video uploads
+    #background loop for checking target channel for new video uploads
     @tasks.loop(seconds=60)
     async def ytupdates(self):
         videolist = self.fetch_channel_videos(10)
