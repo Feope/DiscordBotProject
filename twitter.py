@@ -4,6 +4,7 @@ import os
 import tweepy
 import json
 from dotenv import load_dotenv
+from discord.ext import commands
 
 #Loading the authentication token for the bot
 load_dotenv()
@@ -20,70 +21,77 @@ tweet_text = ""
 tweet_author = url_tag
 url = ""
 
-def twitter_bot():
-    class MyStream(tweepy.StreamingClient):
+class TwitterListener(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-        #Receives the tweet data
-        def on_data(self, raw_data):
-            #Raw data is in byte format so it's decoded first
-            decoded_data = raw_data.decode('UTF-8')
-            #Load the string as json
-            json_data = json.loads(decoded_data)
+    def start_bot(self, bot):
+        class MyStream(tweepy.StreamingClient):
 
-            #Extract id, name and text from the json
-            tweet_id = json_data["data"]["id"]
-            tweet_text = json_data["data"]["text"]
-            tweet_author_from_rules = json_data["matching_rules"][0]["tag"]
+            #Receives the tweet data
+            def on_data(self, raw_data):
+                #Raw data is in byte format so it's decoded first
+                decoded_data = raw_data.decode('UTF-8')
+                #Load the string as json
+                json_data = json.loads(decoded_data)
 
-            #Access global variables
-            global base_url
-            global url_tag
-            global url_part2
-            global url_id
-            global url
+                #Extract id, name and text from the json
+                tweet_id = json_data["data"]["id"]
+                tweet_text = json_data["data"]["text"]
+                tweet_author_from_rules = json_data["matching_rules"][0]["tag"]
 
-            #Assign the tag and id to the global variables
-            url_tag = tweet_author_from_rules
-            url_id = tweet_id
+                #Access global variables
+                global base_url
+                global url_tag
+                global url_part2
+                global url_id
+                global url
 
-            #Recreate the link to the tweet using author from the tag and tweet id
-            url = f"{base_url}{url_tag}{url_part2}{url_id}"
+                #Assign the tag and id to the global variables
+                url_tag = tweet_author_from_rules
+                url_id = tweet_id
 
-            print(f"ID, Text and name from rule tags: {tweet_id} {tweet_text} {tweet_author_from_rules}")
-            print(f"Link to the tweet: {url}")
-            print(tweet_text)
+                #Recreate the link to the tweet using author from the tag and tweet id
+                url = f"{base_url}{url_tag}{url_part2}{url_id}"
 
-            return super().on_data(raw_data)
+                print(f"ID, Text and name from rule tags: {tweet_id} {tweet_text} {tweet_author_from_rules}")
+                print(f"Link to the tweet: {url}")
+                print(tweet_text)
 
-        #Print connected and True in console to know when it is ready to handle tweets    
-        def on_connect(self):
-            print("connected")
-            print(printer.running)
-            return super().on_connect()
+                final_print = f"{url}\n{tweet_author_from_rules} posted:\n{tweet_text}" 
 
-        #Print exception or disconnect on exception or disconnect    
-        def on_exception(self, exception):
-            print("excpetion")
-            return super().on_exception(exception)
-        def on_disconnect(self):
-            print("disconnect")
-            return super().on_disconnect()
+                return super().on_data(raw_data)
 
-    #Assign the token and to wait if limit is reached 
-    printer = MyStream(bearer_token, wait_on_rate_limit=True)
+            #Print connected and True in console to know when it is ready to handle tweets    
+            def on_connect(self):
+                print("connected")
+                print(printer.running)
+                return super().on_connect()
 
-    #Remove all existing filter rules
-    if(printer.get_rules()[0]):
-        rulesDeleted = []
-        list = printer.get_rules()[0]
+            #Print exception or disconnect on exception or disconnect    
+            def on_exception(self, exception):
+                print("excpetion")
+                return super().on_exception(exception)
 
-        for i in list:
-            rulesDeleted.append(i.id)
+            def on_disconnect(self):
+                print("disconnect")
+                return super().on_disconnect()
 
-        for i in rulesDeleted:
-            printer.delete_rules(i)
+        #Assign the token and to wait if limit is reached 
+        printer = MyStream(bearer_token, wait_on_rate_limit=True)
 
-    #Rules to filter for person
-    printer.add_rules(tweepy.StreamRule("from:Meisinger2", "Meisinger2"))
+        #Remove all existing filter rules
+        if(printer.get_rules()[0]):
+            rulesDeleted = []
+            list = printer.get_rules()[0]
 
-    printer.filter()
+            for i in list:
+                rulesDeleted.append(i.id)
+
+            for i in rulesDeleted:
+                printer.delete_rules(i)
+
+        #Rules to filter for person
+        printer.add_rules(tweepy.StreamRule("from:Meisinger2", "Meisinger2"))
+
+        printer.filter()

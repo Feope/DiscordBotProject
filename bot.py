@@ -1,15 +1,19 @@
 # bot.py
 import os
 import discord
-import multiprocessing
 
-from twitter import twitter_bot
+from twitter import TwitterListener
 
 #Environemnt variables to access the token
 from dotenv import load_dotenv
 
 #Importing commands for functionality
 from discord.ext import commands
+
+#Loading token and guild name to make sure that the correct guild and token are used
+load_dotenv()
+TOKEN = os.getenv("DISCORD_TOKEN")
+GUILD = os.getenv("DISCORD_GUILD")
 
 #Defining prefix for later use in commands
 default_prefix = ['!']
@@ -19,11 +23,6 @@ bot = commands.Bot(command_prefix = default_prefix, help_command=None)
 
 #Loading the test file to import extensions
 bot.load_extension('test')
-
-#Loading token and guild name to make sure that the correct guild and token are used
-load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
-GUILD = os.getenv("DISCORD_GUILD")
 
 #Event for on launch check if the selected guild from environments is also in the server list.
 @bot.event
@@ -78,21 +77,18 @@ async def help(ctx):
                         f"{listToStr}greet\n" +
                         f"{listToStr}help")
 
-                     
+async def twitter_post():
+    channel = bot.get_channel(957722236893167736)
+    await channel.send("empty test")              
 
 #Command for testing purposes
 @bot.command()
-async def test(ctx):
-    await ctx.send(ctx.message.raw_mentions)
+async def test(self):
+    twitter = self.bot.get_cog('TwitterListener')
+    twitter.start_bot(bot)
+    #await ctx.send(f"texturl")
+
+bot.add_cog(TwitterListener(bot))   
 
 #Run bot using the token
-def discord_bot():
-    bot.run(TOKEN)
-
-if __name__ == "__main__":
-    p1 = multiprocessing.Process(target=discord_bot)
-    p2 = multiprocessing.Process(target=twitter_bot)
-    p1.start()
-    p2.start()
-    p1.join()
-    p2.join()
+bot.run(TOKEN)
