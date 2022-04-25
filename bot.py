@@ -74,7 +74,7 @@ async def help(ctx):
 
 #Loading extensions/cogs here
 #Unit Converter extension
-bot.load_extension('conversion')
+bot.load_extension('commands.conversion')
 
 #Run bot using the token
 bot.run(TOKEN)
