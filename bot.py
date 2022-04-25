@@ -1,8 +1,6 @@
 # bot.py
 import os
 import discord
-from conversion import Conversion
-# from twitter import TwitterListener
 
 #Environemnt variables to access the token
 from dotenv import load_dotenv
@@ -20,9 +18,6 @@ default_prefix = ['!']
 
 #Assigning the prefix to the bot object and turning off the default help command
 bot = commands.Bot(command_prefix = default_prefix, help_command=None)
-
-#Loading the test file to import extensions
-bot.load_extension('test')
 
 #Event for on launch check if the selected guild from environments is also in the server list.
 @bot.event
@@ -76,19 +71,6 @@ async def help(ctx):
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
                         f"{listToStr}help")
-
-""" async def twitter_post():
-    channel = bot.get_channel(957722236893167736)
-    await channel.send("empty test")     """          
-
-""" #Command for testing purposes
-@bot.command()
-async def test(self):
-    twitter = self.bot.get_cog('TwitterListener')
-    twitter.start_bot(bot)
-    #await ctx.send(f"texturl") """
-
-""" bot.add_cog(TwitterListener(bot))   """
 
 #Loading extensions/cogs here
 #Unit Converter extension
