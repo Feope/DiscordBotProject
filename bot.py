@@ -1,8 +1,8 @@
 # bot.py
 import os
 import discord
-
-from twitter import TwitterListener
+from conversion import Conversion
+# from twitter import TwitterListener
 
 #Environemnt variables to access the token
 from dotenv import load_dotenv
@@ -77,18 +77,22 @@ async def help(ctx):
                         f"{listToStr}greet\n" +
                         f"{listToStr}help")
 
-async def twitter_post():
+""" async def twitter_post():
     channel = bot.get_channel(957722236893167736)
-    await channel.send("empty test")              
+    await channel.send("empty test")     """          
 
-#Command for testing purposes
+""" #Command for testing purposes
 @bot.command()
 async def test(self):
     twitter = self.bot.get_cog('TwitterListener')
     twitter.start_bot(bot)
-    #await ctx.send(f"texturl")
+    #await ctx.send(f"texturl") """
 
-bot.add_cog(TwitterListener(bot))   
+""" bot.add_cog(TwitterListener(bot))   """
+
+#Loading extensions/cogs here
+#Unit Converter extension
+bot.load_extension('conversion')
 
 #Run bot using the token
 bot.run(TOKEN)
