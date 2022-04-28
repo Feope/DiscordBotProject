@@ -1,7 +1,5 @@
 # bot.py
 import os
-import commands.ytl
-
 
 #Environemnt variables to access the token
 from dotenv import load_dotenv
@@ -16,8 +14,8 @@ default_prefix = ['!']
 bot = commands.Bot(command_prefix = default_prefix, help_command=None)
 
 #Loading command extension files
-bot.load_extension('test')
-bot.load_extension('commands.ytl')
+bot.load_extension('cogs.dice')
+bot.load_extension('cogs.ytl')
 
 #Loading token and guild name to make sure that the correct guild and token are used
 load_dotenv()
