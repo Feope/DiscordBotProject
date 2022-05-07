@@ -49,7 +49,7 @@ async def prefix(ctx):
 async def greet(ctx):
     await ctx.send(f"Hello {ctx.author.display_name}")
 
-#Lists the current commands and pings mentioned user(s) or author if no mentions
+#Lists the current commands(manually added) and pings mentioned user(s) or author if no mentions
 @bot.command()
 async def help(ctx):
     listToStr = ''.join(map(str, bot.command_prefix))
@@ -63,18 +63,29 @@ async def help(ctx):
                         f"{listToStr}prefix\n" +
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
-                        f"{listToStr}help")
+                        f"{listToStr}help\n" +
+                        f"{listToStr}include(Admin)\n" +
+                        f"{listToStr}exclude(Admin)\n" +
+                        f"{listToStr}convert\n" +
+                        f"{listToStr}c")
     else:
         meauth = f"<@{ctx.author.id}>"    
         await ctx.send(f"{meauth} Current commands for the bot are: \n" +
                         f"{listToStr}prefix\n" +
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
-                        f"{listToStr}help")
+                        f"{listToStr}help\n" +
+                        f"{listToStr}include(Admin)\n" +
+                        f"{listToStr}exclude(Admin)\n" +
+                        f"{listToStr}convert\n" +
+                        f"{listToStr}c")
 
 #Loading extensions/cogs here
+
 #Unit Converter extension
 bot.load_extension('commands.conversion')
+#Blacklist extension
+bot.load_extension('commands.list')
 
 #Run bot using the token
 bot.run(TOKEN)

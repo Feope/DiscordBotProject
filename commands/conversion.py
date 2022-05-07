@@ -11,21 +11,26 @@ class Conversion(commands.Cog):
     async def on_ready(self):
         print("Converter loaded")
 
+    #Converter for lengths in imperial and metric
     @commands.command(name="convert", aliases=["c"])
     async def convert(self, ctx):
         message = ctx.message.content
         channel = ctx.channel
+
+        #Remove "!c" or "!convert" from string
         if(message.startswith("co")):
             result = message[8:]
         else:
             result = message[2:]
 
+        #Check if it contains a length unit
         if(result):
             trimmedResult = re.sub(r'[0-9\.\s]+', '', result)
             resultLower = trimmedResult.lower()
             numberResult = re.sub(r'[\D\s]+', '', result)
             metres = 0
 
+            #Check for which unit and set the default metres accordingly
             if(resultLower == 'm'):
                 metres = int(numberResult)
             elif(resultLower == 'km'):
@@ -43,6 +48,7 @@ class Conversion(commands.Cog):
             elif(resultLower == 'feet'):
                 metres = int(numberResult) * 0.3048
 
+            #Calculating of the remaining units, up to 3 after decimal points 
             km = round(metres * (10**-3), 3)
             m = round(metres, 3)
             dm = round(metres * (10**1), 3)
@@ -52,6 +58,7 @@ class Conversion(commands.Cog):
             feet = round(metres * 3.280839895, 3)
             inches = round(metres * 39.3700787402, 3)
 
+            #Say it is less than 0.001 if its 0
             if(km == 0):
                 km = "<0.001"
             if(m == 0):
@@ -69,6 +76,7 @@ class Conversion(commands.Cog):
             if(inches == 0):
                 inches = "<0.001"
 
+            #Turn the results into an embed and send it
             embed=discord.Embed(title=f"{result}", color=0xFF5733)
             embed.add_field(name="km", value=f"{km}", inline=True)
             embed.add_field(name="m", value=f"{m}", inline=True)
