@@ -3,14 +3,14 @@ A bot for learning purposes
 
 ## Requirements
 ```bash
-pip install -U discord.py
+pip install discord.py
 pip install python-dotenv
 pip install regex
 ```
 
 Register a bot in the [Discord Developer Portal](https://discord.com/developers/docs/getting-started) and add it to your server
 
-In the .env file add your token from the registered bot
+Create a .env file and add your token from the registered bot
 ```bash
 DISCORD_TOKEN="TOKEN HERE"
 ```
