@@ -64,7 +64,7 @@ async def help(ctx):
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
                         f"{listToStr}help\n" +
-                        f"{listToStr}roll")
+                        f"{listToStr}roll" +
                         f"{listToStr}include(Admin)\n" +
                         f"{listToStr}exclude(Admin)\n" +
                         f"{listToStr}convert\n" +
@@ -76,7 +76,7 @@ async def help(ctx):
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
                         f"{listToStr}help\n" +
-                        f"{listToStr}roll")
+                        f"{listToStr}roll\n" +
                         f"{listToStr}include(Admin)\n" +
                         f"{listToStr}exclude(Admin)\n" +
                         f"{listToStr}convert\n" +
@@ -85,9 +85,9 @@ async def help(ctx):
 #Loading extensions/cogs here
 
 #Unit Converter extension
-bot.load_extension('commands.conversion')
+bot.load_extension('cogs.conversion')
 #Blacklist extension
-bot.load_extension('commands.list')
+bot.load_extension('cogs.list')
 #Dice commands
 bot.load_extension('cogs.dice')
 #YTL commands
