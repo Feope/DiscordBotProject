@@ -1,6 +1,5 @@
 # bot.py
 import os
-import discord
 
 #Environemnt variables to access the token
 from dotenv import load_dotenv
@@ -65,6 +64,7 @@ async def help(ctx):
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
                         f"{listToStr}help\n" +
+                        f"{listToStr}roll")
                         f"{listToStr}include(Admin)\n" +
                         f"{listToStr}exclude(Admin)\n" +
                         f"{listToStr}convert\n" +
@@ -76,6 +76,7 @@ async def help(ctx):
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
                         f"{listToStr}help\n" +
+                        f"{listToStr}roll")
                         f"{listToStr}include(Admin)\n" +
                         f"{listToStr}exclude(Admin)\n" +
                         f"{listToStr}convert\n" +
@@ -87,6 +88,13 @@ async def help(ctx):
 bot.load_extension('commands.conversion')
 #Blacklist extension
 bot.load_extension('commands.list')
+#Dice commands
+bot.load_extension('cogs.dice')
+#YTL commands
+bot.load_extension('cogs.ytl')
 
 #Run bot using the token
 bot.run(TOKEN)
+
+
+
