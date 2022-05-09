@@ -7,6 +7,8 @@ A bot for learning purposes that can convert units, automatically delete message
 pip install discord.py
 pip install python-dotenv
 pip install regex
+pip install --upgrade google-api-python-client
+pip install --upgrade google-auth-oauthlib google-auth-httplib2
 ```
 
 Register a bot by following the guide in the [Discord Developer Portal](https://discord.com/developers/docs/getting-started) and add it to your server.
