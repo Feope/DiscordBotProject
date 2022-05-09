@@ -28,17 +28,17 @@ bad, test, words, reversed
 
 ## Roll Commands
 
-With roll command you can roll dice of specified sizes.
-Command input is roll (number)D(number). 
-Where the first number is the ammount of dice rolled and the second number is the sides of the dice.
+With roll command you can roll dice of specified sizes.<br />
+Command input is roll (number)D(number).<br /> 
+Where the first number is the ammount of dice rolled and the second number is the sides of the dice.<br />
 Examples:
 ```
 !roll 5d4
 !roll 2D10
 ```
 
-Extra arguments can be given to make the bot do something with the rolls.
-Capitalization does not matter for the arguments.
+Extra arguments can be given to make the bot do something with the rolls.<br />
+Capitalization does not matter for the arguments.<br />
 Curently accepted arguments are:
 ```
 higher, high, h
@@ -46,12 +46,12 @@ lower, low, l
 under, u
 over, o
 ```
-Higest X, gives the highest X rolls.
-Lowest X, gives the lowest X rolls.
-Under X, gives the rolls that were X or under.
-Over X, gives the rolls that were X or over.
+Higest X, gives the highest X rolls.<br />
+Lowest X, gives the lowest X rolls.<br />
+Under X, gives the rolls that were X or under.<br />
+Over X, gives the rolls that were X or over.<br />
 
-Accepted format for the arguments is (argument)(number). Multiple arugments can be given by seperating each one with a (,).
+Accepted format for the arguments is (argument)(number). Multiple arugments can be given by seperating each one with a (,).<br />
 Examples:
 
 ```
