@@ -1,17 +1,6 @@
 # DiscordBotProject
 A bot for learning purposes that can convert units, automatically delete messages containing specified words, roll dice and notify about new YouTube videos.
 
-## Work split
-
-Main bot	
-Felix Pape, Kim satokangas
-
-Twitter, Blacklist, Converter	
-Felix Pape
-
-Youtube, Roller	
-Kim Satokangas
-
 ## Requirements
 ```bash
 pip install discord.py
@@ -70,3 +59,14 @@ Examples:
 !roll 10d10 low3, high 2, under 2
 !roll 10d10 over 7, lowest 5
 ```
+
+## Work split
+
+Main bot\n	
+Felix Pape, Kim satokangas
+
+Twitter, Blacklist, Converter\n	
+Felix Pape
+
+Youtube, Roller\n	
+Kim Satokangas
