@@ -26,3 +26,37 @@ For the blacklist you may edit the list.txt manually like this:
 ```
 bad, test, words, reversed
 ```
+
+## Roll Commands
+
+With roll command you can roll dice of specified sizes.
+Command input is roll (number)D(number). 
+Where the first number is the ammount of dice rolled and the second number is the sides of the dice.
+Examples:
+```
+!roll 5d4
+!roll 2D10
+```
+
+Extra arguments can be given to make the bot do something with the rolls.
+Capitalization does not matter for the arguments.
+Curently accepted arguments are:
+```
+higher, high, h
+lower, low, l
+under, u
+over, o
+```
+Higest X, gives the highest X rolls.
+Lowest X, gives the lowest X rolls.
+Under X, gives the rolls that were X or under.
+Over X, gives the rolls that were X or over.
+
+Accepted format for the arguments is (argument)(number). Multiple arugments can be given by seperating each one with a (,).
+Examples:
+
+```
+!roll 10D10 h2, l2,u5,o6
+!roll 10d10 low3, high 2, under 2
+!roll 10d10 over 7, lowest 5
+```
