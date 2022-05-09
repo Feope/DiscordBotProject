@@ -1,6 +1,16 @@
 # DiscordBotProject
 A bot for learning purposes that can convert units, automatically delete messages containing specified words, roll dice and notify about new YouTube videos.
 
+## Work split
+
+Main bot	
+Felix Pape, Kim satokangas
+
+Twitter, Blacklist, Converter	
+Felix Pape
+
+Youtube, Roller	
+Kim Satokangas
 
 ## Requirements
 ```bash
