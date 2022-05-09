@@ -7,21 +7,16 @@ from dotenv import load_dotenv
 #Importing commands for functionality
 from discord.ext import commands
 
-#Defining prefix for later use in commands
-default_prefix = ['!']
-
-#Assigning the prefix to the bot object and turning off the default help command
-bot = commands.Bot(command_prefix = default_prefix, help_command=None)
-
-#Loading command extension files
-bot.load_extension('cogs.dice')
-bot.load_extension('cogs.ytl')
-
 #Loading token and guild name to make sure that the correct guild and token are used
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 GUILD = os.getenv("DISCORD_GUILD")
 
+#Defining prefix for later use in commands
+default_prefix = ['!']
+
+#Assigning the prefix to the bot object and turning off the default help command
+bot = commands.Bot(command_prefix = default_prefix, help_command=None)
 
 #Event for on launch check if the selected guild from environments is also in the server list.
 @bot.event
@@ -38,6 +33,7 @@ async def on_ready():
 
 #Setting the new prefix to passed argument
 @bot.command()
+@commands.has_permissions(administrator=True)
 async def setprefix(ctx, prefix):
     bot.command_prefix = prefix
     await ctx.send(f"Prefix changed to ``{prefix}``")
@@ -53,7 +49,7 @@ async def prefix(ctx):
 async def greet(ctx):
     await ctx.send(f"Hello {ctx.author.display_name}")
 
-#Lists the current commands and pings mentioned user(s) or author if no mentions
+#Lists the current commands(manually added) and pings mentioned user(s) or author if no mentions
 @bot.command()
 async def help(ctx):
     listToStr = ''.join(map(str, bot.command_prefix))
@@ -69,6 +65,10 @@ async def help(ctx):
                         f"{listToStr}greet\n" +
                         f"{listToStr}help\n" +
                         f"{listToStr}roll")
+                        f"{listToStr}include(Admin)\n" +
+                        f"{listToStr}exclude(Admin)\n" +
+                        f"{listToStr}convert\n" +
+                        f"{listToStr}c")
     else:
         meauth = f"<@{ctx.author.id}>"    
         await ctx.send(f"{meauth} Current commands for the bot are: \n" +
@@ -77,12 +77,21 @@ async def help(ctx):
                         f"{listToStr}greet\n" +
                         f"{listToStr}help\n" +
                         f"{listToStr}roll")
+                        f"{listToStr}include(Admin)\n" +
+                        f"{listToStr}exclude(Admin)\n" +
+                        f"{listToStr}convert\n" +
+                        f"{listToStr}c")
 
-#Command for testing purposes
-@bot.command()
-async def test(ctx):
-    await ctx.send(ctx.message.raw_mentions)
+#Loading extensions/cogs here
 
+#Unit Converter extension
+bot.load_extension('commands.conversion')
+#Blacklist extension
+bot.load_extension('commands.list')
+#Dice commands
+bot.load_extension('cogs.dice')
+#YTL commands
+bot.load_extension('cogs.ytl')
 
 #Run bot using the token
 bot.run(TOKEN)
