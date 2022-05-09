@@ -62,11 +62,11 @@ Examples:
 
 ## Work split
 
-Main bot\n	
+Main bot
 Felix Pape, Kim satokangas
 
-Twitter, Blacklist, Converter\n	
+Twitter, Blacklist, Converter	
 Felix Pape
 
-Youtube, Roller\n	
+Youtube, Roller
 Kim Satokangas
