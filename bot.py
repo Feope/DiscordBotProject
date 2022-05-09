@@ -34,6 +34,7 @@ async def on_ready():
 
 #Setting the new prefix to passed argument
 @bot.command()
+@commands.has_permissions(administrator=True)
 async def setprefix(ctx, prefix):
     bot.command_prefix = prefix
     await ctx.send(f"Prefix changed to ``{prefix}``")
