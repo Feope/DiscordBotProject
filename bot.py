@@ -67,14 +67,16 @@ async def help(ctx):
                         f"{listToStr}prefix\n" +
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
-                        f"{listToStr}help")
+                        f"{listToStr}help\n" +
+                        f"{listToStr}roll")
     else:
         meauth = f"<@{ctx.author.id}>"    
         await ctx.send(f"{meauth} Current commands for the bot are: \n" +
                         f"{listToStr}prefix\n" +
                         f"{listToStr}setprefix\n" +
                         f"{listToStr}greet\n" +
-                        f"{listToStr}help")
+                        f"{listToStr}help\n" +
+                        f"{listToStr}roll")
 
 #Command for testing purposes
 @bot.command()
