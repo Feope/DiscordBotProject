@@ -12,7 +12,7 @@ pip install --upgrade google-auth-oauthlib google-auth-httplib2
 
 Register a bot by following the guide in the [Discord Developer Portal](https://discord.com/developers/docs/getting-started) and add it to your server.
 
-Create a Youtube API key by following the guide to create API keys in [Google Developers documentation](https://developers.google.com/youtube/registering_an_application)
+Create a Youtube API key by following the guide to create API keys in [Google Developers Documentation](https://developers.google.com/youtube/registering_an_application)
 
 Create a .env file and add your tokens from the registered bot and youtube developers console:
 ```bash
