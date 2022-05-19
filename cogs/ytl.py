@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 #fetch Youtube API key from env file
 load_dotenv()
 YTKEY = os.getenv("YOUTUBE_APITOKEN")
-GUILD = os.getenv("DISCORD_GUILD")
-
 
 class YoutubeWatcher(commands.Cog):
     def __init__(self, bot):
@@ -44,7 +42,7 @@ class YoutubeWatcher(commands.Cog):
                     video_id = item["id"]["videoId"]
                     videos.append(video_id)
             except KeyError:
-                print("error")
+                print("KeyError")
         return videos
 
     #command to set the youtube channels ID 
@@ -69,7 +67,7 @@ class YoutubeWatcher(commands.Cog):
             self.channel = discord.utils.get(ctx.guild.channels, name=channelname)
             if self.channel != None:
                 await ctx.send(f"Channel set to ``{self.channel}``")
-            await self.channel.send("Hello there.")
+            await self.channel.send("Channel set.")
         except:
             await ctx.send(f"Channel not found, channel set to ``{self.channel}``")
 
@@ -77,7 +75,7 @@ class YoutubeWatcher(commands.Cog):
     @commands.command()
     async def checktest(self, ctx):
         if (self.channel != None and self.youtubeid != None):
-            videolist = self.fetch_channel_videos(1)
+            videolist = self.fetch_channel_videos(10)
             newvideo = "https://www.youtube.com/watch?v=" + videolist[0]
             await ctx.send(f"Video ID list ``{videolist}``")
             if newvideo == self.oldvid:
@@ -97,7 +95,7 @@ class YoutubeWatcher(commands.Cog):
     @tasks.loop(minutes=15)
     async def ytupdates(self):
         try:
-            videolist = self.fetch_channel_videos(1)
+            videolist = self.fetch_channel_videos(10)
             newvideo = "https://www.youtube.com/watch?v=" + videolist[0]
             if newvideo == self.oldvid:
                 return
@@ -128,6 +126,26 @@ class YoutubeWatcher(commands.Cog):
     async def stop(self, ctx):
         self.ytstop()
         await ctx.send("Stopping monitoring")
+    
+    #Help command to explain what other commands do
+    @commands.command()
+    async def ythelp(self, ctx, *args):
+        match args:
+            case args if "setyoutubeid" in args:
+                await ctx.send("""```setyoutubeid```This command is used to set the youtube channel ID the bot will monitor for uploads.
+Youtube channel ID is the long string for characters that comes after /channel/ in the browser adress bar.
+```youtube.com/channel/UC2qctq0C3AjymJHMQAONMbQ``` Channel ID for this channel would be "UC2qctq0C3AjymJHMQAONMbQ" """)
+            case args if "setdiscordchannel" in args:
+                await ctx.send("""```setdiscordchannel```This command is used to set the discord channel where the bot will post new uploads it detects on the target youtube channel.
+The chosen channel needs to exist on the server and the name needs to be written in correct case.""")
+            case args if "checktest" in args:
+                await ctx.send("""```checktest``` This command is used to test the video fetching from the channel and to see if everything is set up correctly.""")
+            case args if "start" in args or "stop" in args:
+                await ctx.send("""```start``` and ```stop``` Start command will begin the monitoring of the chosen channel. Stop command will stop the monitoring.""")
+            case _:
+                await ctx.send("""Write a YT command after the help command to get information about the given command.
+The commands are: setyoutubeid, setdiscordchannel, checktest, start, stop.""")
+            
 
 #loading the cog to bot
 def setup(bot):

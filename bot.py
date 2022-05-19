@@ -68,7 +68,13 @@ async def help(ctx):
                         f"{listToStr}include(Admin)\n" +
                         f"{listToStr}exclude(Admin)\n" +
                         f"{listToStr}convert\n" +
-                        f"{listToStr}c")
+                        f"{listToStr}c\n" +
+                        f"{listToStr}setdiscordchannel\n" +
+                        f"{listToStr}setyoutubeid\n" +
+                        f"{listToStr}checktest\n" +
+                        f"{listToStr}start\n" +
+                        f"{listToStr}stop\n" +
+                        f"{listToStr}ythelp")
     else:
         meauth = f"<@{ctx.author.id}>"    
         await ctx.send(f"{meauth} Current commands for the bot are: \n" +
@@ -80,7 +86,13 @@ async def help(ctx):
                         f"{listToStr}include(Admin)\n" +
                         f"{listToStr}exclude(Admin)\n" +
                         f"{listToStr}convert\n" +
-                        f"{listToStr}c")
+                        f"{listToStr}c\n" +
+                        f"{listToStr}setdiscordchannel\n" +
+                        f"{listToStr}setyoutubeid\n" +
+                        f"{listToStr}checktest\n" +
+                        f"{listToStr}start\n" +
+                        f"{listToStr}stop\n" +
+                        f"{listToStr}ythelp")
 
 #Loading extensions/cogs here
 

@@ -21,7 +21,7 @@ class Blacklist(commands.Cog):
         message = ctx.content
 
         #Only non admins messages get deleted
-        if not(discord.utils.get(ctx.author.roles, name='Admin')):
+        if not(discord.utils.get(ctx.author.roles, name='Admin') or discord.utils.get(ctx.author.roles, name='Bot')):
             if any(x in message for x in bList):
                 print("match")
                 await ctx.delete()
