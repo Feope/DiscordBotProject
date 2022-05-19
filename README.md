@@ -59,6 +59,34 @@ Examples:
 !roll 10d10 low3, high 2, under 2
 !roll 10d10 over 7, lowest 5
 ```
+## Youtube Commands
+
+Bot can be set to monitor a Youtube channel and post new uploads to a specified discord channel periodically.\
+Currently recognized commands are:\
+
+```
+ythelp x
+```
+Gives information about the given command x. Where x is one of the other Youtube commands.\
+
+```
+setdiscordchannel
+```
+Sets the channel bot will use to send notifications to.\
+```
+setyoutubeid
+```
+Sets the Youtube channel id, which the bot will use to check for uploads.\
+```
+checktest
+```
+Test command to see if the bot is working correctly.\
+
+```
+start
+stop
+```
+Commands to start and stop the monitoring loop.\
 
 ## Work split
 
