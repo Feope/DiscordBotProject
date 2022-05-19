@@ -14,7 +14,7 @@ Register a bot by following the guide in the [Discord Developer Portal](https://
 
 Create a Youtube API key by following the guide to create API keys in [Google Developers documentation](https://developers.google.com/youtube/registering_an_application)
 
-Create a .env file and add your tokens from the registered bot and youtube:
+Create a .env file and add your tokens from the registered bot and youtube developers console:
 ```bash
 DISCORD_TOKEN="TOKEN HERE"
 YOUTUBE_APITOKEN=”TOKEN HERE”
